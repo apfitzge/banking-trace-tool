@@ -6,3 +6,4 @@ repository = "https://github.com/apfitzge/banking-trace-tool"
 edition = "2021"
 
 [dependencies]
+clap = { version = "4.3.11", features = ["derive"] }
