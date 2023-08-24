@@ -1,0 +1,8 @@
+[package]
+name = "banking-trace-tool"
+version = "0.1.0"
+authors = ["Andrew Fitzgerald <apfitzge@gmail.com>"]
+repository = "https://github.com/apfitzge/banking-trace-tool"
+edition = "2021"
+
+[dependencies]
