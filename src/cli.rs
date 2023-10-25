@@ -5,7 +5,7 @@ use {
 
 #[derive(Debug, Parser)]
 pub struct Cli {
-    /// The path to the banking trace event files.
+    /// The path to the banking trace event file directory.
     #[clap(short, long)]
     pub path: PathBuf,
     /// Mode to run the trace-tool in.
@@ -14,4 +14,7 @@ pub struct Cli {
 }
 
 #[derive(Debug, Subcommand)]
-pub enum TraceToolMode {}
+pub enum TraceToolMode {
+    /// Get the ranges of slots for data in directory.
+    SlotRanges,
+}
