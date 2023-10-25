@@ -7,10 +7,10 @@ use {
 pub struct Cli {
     /// The path to the banking trace event files.
     #[clap(short, long)]
-    path: PathBuf,
+    pub path: PathBuf,
     /// Mode to run the trace-tool in.
     #[command(subcommand)]
-    mode: TraceToolMode,
+    pub mode: TraceToolMode,
 }
 
 #[derive(Debug, Subcommand)]
