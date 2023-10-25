@@ -1,7 +1,4 @@
-use clap::Parser;
-use setup::get_event_file_paths;
-
-use crate::cli::Cli;
+use {crate::cli::Cli, clap::Parser, setup::get_event_file_paths};
 
 mod cli;
 mod process;
