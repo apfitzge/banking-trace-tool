@@ -6,4 +6,6 @@ repository = "https://github.com/apfitzge/banking-trace-tool"
 edition = "2021"
 
 [dependencies]
+bincode = { version = "1.3.3" }
 clap = { version = "4.3.11", features = ["derive"] }
+solana-core = { version = "1.17.3" }
