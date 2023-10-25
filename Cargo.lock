@@ -555,6 +555,7 @@ dependencies = [
  "bincode",
  "clap 4.4.0",
  "solana-core",
+ "solana-sdk",
 ]
 
 [[package]]
