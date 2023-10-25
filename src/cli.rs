@@ -1,6 +1,7 @@
-use std::path::PathBuf;
-
-use clap::{Parser, Subcommand};
+use {
+    clap::{Parser, Subcommand},
+    std::path::PathBuf,
+};
 
 #[derive(Debug, Parser)]
 pub struct Cli {
