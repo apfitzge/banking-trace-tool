@@ -118,6 +118,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "alt-store"
+version = "0.1.0"
+source = "git+https://github.com/apfitzge/solana-alt-store.git#ac9edd05f45b6f781028668cad4397bc2478c373"
+dependencies = [
+ "bincode",
+ "serde",
+ "solana-client",
+ "solana-sdk",
+]
+
+[[package]]
 name = "android-tzdata"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -552,6 +563,7 @@ dependencies = [
 name = "banking-trace-tool"
 version = "0.1.0"
 dependencies = [
+ "alt-store",
  "bincode",
  "clap 4.4.0",
  "solana-core",

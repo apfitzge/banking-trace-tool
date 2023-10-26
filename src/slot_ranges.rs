@@ -26,7 +26,7 @@ impl SlotRangesHandler {
                         *end_slot = slot;
                     } else {
                         self.report_current_range();
-                        self.current_range = None;
+                        self.current_range = Some((slot, slot));
                     }
                 }
                 None => self.current_range = Some((slot, slot)),

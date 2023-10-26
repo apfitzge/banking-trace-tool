@@ -18,7 +18,7 @@ pub enum TraceToolMode {
     /// Get the ranges of slots for data in directory.
     SlotRanges,
     /// Update Address-Lookup-Table store for tables used in a given slot-range.
-    UpdateAddressLookupTableStore {
+    UpdateAltStore {
         /// The starting slot of the range, inclusive.
         start_slot: u64,
         /// The ending slot of the range, inclusive.

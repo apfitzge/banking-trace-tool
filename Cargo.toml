@@ -10,3 +10,4 @@ bincode = { version = "1.3.3" }
 clap = { version = "4.3.11", features = ["derive"] }
 solana-core = { version = "1.17.3" }
 solana-sdk = { version = "1.17.3" }
+alt-store = { git = "https://github.com/apfitzge/solana-alt-store.git" }
