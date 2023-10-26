@@ -1,5 +1,5 @@
 use {
-    crate::process::process_event_files,
+    crate::{cli::SlotRange, process::process_event_files},
     alt_store::{Store, UpdateMode},
     solana_core::banking_trace::{BankingPacketBatch, ChannelLabel, TimedTracedEvent, TracedEvent},
     solana_sdk::{slot_history::Slot, transaction::VersionedTransaction},
@@ -8,10 +8,9 @@ use {
 
 pub fn update_alt_store(
     event_file_paths: &[PathBuf],
-    start_slot: Slot,
-    end_slot: Slot,
+    slot_range: SlotRange,
 ) -> std::io::Result<()> {
-    let mut handler = UpdateAddressLookupTableStoreHandler::new(start_slot, end_slot);
+    let mut handler = UpdateAddressLookupTableStoreHandler::new(slot_range);
     process_event_files(event_file_paths, &mut |event| handler.handle_event(event))?;
     Ok(())
 }
@@ -24,11 +23,11 @@ struct UpdateAddressLookupTableStoreHandler {
 }
 
 impl UpdateAddressLookupTableStoreHandler {
-    pub fn new(start_slot: Slot, end_slot: Slot) -> Self {
+    pub fn new(slot_range: SlotRange) -> Self {
         const ALT_STORE_PATH: &str = "alt-store.bin";
 
         Self {
-            range: start_slot..=end_slot,
+            range: slot_range.start_slot..=slot_range.end_slot,
             current_packet_batches: Vec::new(),
             done: false,
             alt_store: Store::load_or_create(ALT_STORE_PATH).expect("failed to load alt store"),
