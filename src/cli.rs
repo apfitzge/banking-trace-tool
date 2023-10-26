@@ -1,5 +1,6 @@
 use {
-    clap::{Parser, Subcommand},
+    clap::{Args, Parser, Subcommand},
+    solana_sdk::clock::Slot,
     std::path::PathBuf,
 };
 
@@ -15,13 +16,18 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum TraceToolMode {
+    /// Get account usage statistics for a given slot range.
+    AccountUsage(SlotRange),
     /// Get the ranges of slots for data in directory.
     SlotRanges,
     /// Update Address-Lookup-Table store for tables used in a given slot-range.
-    UpdateAltStore {
-        /// The starting slot of the range, inclusive.
-        start_slot: u64,
-        /// The ending slot of the range, inclusive.
-        end_slot: u64,
-    },
+    UpdateAltStore(SlotRange),
+}
+
+#[derive(Debug, Args)]
+pub struct SlotRange {
+    /// The starting slot of the range, inclusive.
+    pub start_slot: Slot,
+    /// The ending slot of the range, inclusive.
+    pub end_slot: Slot,
 }
