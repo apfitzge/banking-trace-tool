@@ -92,8 +92,7 @@ impl AccountUsageHandler {
         }
 
         // Sort accounts by write usage before report. Higher usage first.
-        let mut account_usage_statistics: Vec<_> =
-            account_usage_statistics.values().into_iter().collect();
+        let mut account_usage_statistics: Vec<_> = account_usage_statistics.values().collect();
         account_usage_statistics.sort_by_key(|s| -(s.num_writes as i64));
 
         // Report
@@ -210,7 +209,7 @@ fn get_priority_and_requested_cus(tx: &SanitizedVersionedTransaction) -> (u64, u
             ComputeBudgetInstruction::SetComputeUnitLimit(units) => {
                 requested_cus = Some(units as u64)
             }
-            ComputeBudgetInstruction::SetComputeUnitPrice(cu_price) => priority = cu_price as u64,
+            ComputeBudgetInstruction::SetComputeUnitPrice(cu_price) => priority = cu_price,
             ComputeBudgetInstruction::SetLoadedAccountsDataSizeLimit(_) => {}
         }
     }
