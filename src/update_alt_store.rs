@@ -1,6 +1,6 @@
 use {
     crate::{cli::SlotRange, process::process_event_files},
-    alt_store::{Store, UpdateMode},
+    solana_alt_store::{Store, UpdateMode},
     solana_core::banking_trace::{BankingPacketBatch, ChannelLabel, TimedTracedEvent, TracedEvent},
     solana_sdk::{slot_history::Slot, transaction::VersionedTransaction},
     std::{collections::HashSet, ops::RangeInclusive, path::PathBuf},
