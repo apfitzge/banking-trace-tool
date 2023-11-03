@@ -18,6 +18,14 @@ pub struct Cli {
 pub enum TraceToolMode {
     /// Get account usage statistics for a given slot range.
     AccountUsage(SlotRange),
+    /// Write graphia json input file for a given slot.
+    GraphiaInput {
+        /// The slot to write the graphia input file for.
+        slot: Slot,
+        /// The filepath to write the graphia input file to.
+        #[clap(default_value = "graphia_input.json")]
+        output: PathBuf,
+    },
     /// Get the ranges of slots for data in directory.
     SlotRanges,
     /// Update Address-Lookup-Table store for tables used in a given slot-range.

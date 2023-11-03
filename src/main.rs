@@ -1,7 +1,7 @@
 use {
     crate::{
-        account_usage::account_usage, cli::Cli, slot_ranges::slot_ranges,
-        update_alt_store::update_alt_store,
+        account_usage::account_usage, cli::Cli, graphia_input::graphia_input,
+        slot_ranges::slot_ranges, update_alt_store::update_alt_store,
     },
     clap::Parser,
     cli::TraceToolMode,
@@ -11,6 +11,7 @@ use {
 
 mod account_usage;
 mod cli;
+mod graphia_input;
 mod process;
 mod setup;
 mod slot_ranges;
@@ -27,6 +28,9 @@ fn main() {
     let event_file_paths = get_event_file_paths(path);
     let result = match mode {
         TraceToolMode::AccountUsage(slot_range) => account_usage(&event_file_paths, slot_range),
+        TraceToolMode::GraphiaInput { slot, output } => {
+            graphia_input(&event_file_paths, slot, output)
+        }
         TraceToolMode::SlotRanges => slot_ranges(&event_file_paths),
         TraceToolMode::UpdateAltStore(slot_range) => {
             update_alt_store(&event_file_paths, slot_range)

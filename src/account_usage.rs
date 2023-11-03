@@ -109,8 +109,12 @@ impl AccountUsageHandler {
     }
 
     fn handle_block_and_bank_hash(&mut self, slot: Slot) {
-        if !self.range.contains(&slot) && slot > *self.range.end() {
-            self.done = true;
+        if !self.range.contains(&slot) {
+            if slot > *self.range.end() {
+                self.done = true;
+            }
+        } else {
+            self.current_packet_batches.clear();
         }
     }
 }
