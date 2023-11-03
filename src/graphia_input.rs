@@ -74,12 +74,9 @@ impl GraphiaInputHandler {
             })
             .filter_map(|(tx, priority, requested_cus)| {
                 let hash = tx.get_message().message.hash();
-                let tx = SanitizedTransaction::try_new(tx, hash, false, &self.alt_store)
-                    // .ok()
+                SanitizedTransaction::try_new(tx, hash, false, &self.alt_store)
+                    .ok()
                     .map(|tx| (tx, priority, requested_cus))
-                    .unwrap();
-
-                Some(tx)
             })
             .collect();
 
