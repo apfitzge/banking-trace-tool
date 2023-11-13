@@ -160,13 +160,15 @@ impl GraphiaInputHandler {
 
                 // Add edges to graphia input graph.
                 for target in unblocked {
-                    graphia_input.graph.edges.push(GraphiaInputEdge {
-                        id: edge_count.to_string(),
-                        // metadata: GraphiaInputEdgeMetaData {},
-                        source: popped.index.to_string(),
-                        target: target.index.to_string(),
-                    });
-                    edge_count += 1;
+                    if !prio_graph.is_blocked(target) {
+                        graphia_input.graph.edges.push(GraphiaInputEdge {
+                            id: edge_count.to_string(),
+                            // metadata: GraphiaInputEdgeMetaData {},
+                            source: popped.index.to_string(),
+                            target: target.index.to_string(),
+                        });
+                        edge_count += 1;
+                    }
                 }
             }
         }
