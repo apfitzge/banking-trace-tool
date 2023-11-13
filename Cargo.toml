@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 bincode = { version = "1.3.3" }
 clap = { version = "4.3.11", features = ["derive"] }
-prio-graph = { git = "https://github.com/apfitzge/prio-graph.git", rev = "fcf06ed020d6dd5325122789cd3633547c6d023c" }
+prio-graph = { git = "https://github.com/apfitzge/prio-graph.git", rev = "c8ced5c68dbb64307573654897cf3284a4ac8a16" }
 serde = { version = "1.0.190" }
 serde_json = { version = "1.0.108" }
 solana-core = { version = "1.17.3" }
