@@ -3,7 +3,7 @@ use {
     solana_alt_store::Store,
     solana_core::banking_trace::{BankingPacketBatch, ChannelLabel, TimedTracedEvent, TracedEvent},
     solana_sdk::{
-        borsh0_10::try_from_slice_unchecked,
+        borsh1::try_from_slice_unchecked,
         clock::Slot,
         compute_budget::{self, ComputeBudgetInstruction},
         pubkey::Pubkey,
@@ -202,19 +202,13 @@ fn get_priority_and_requested_cus(tx: &SanitizedVersionedTransaction) -> (u64, u
 
         let ix: ComputeBudgetInstruction = try_from_slice_unchecked(&ix.data).unwrap();
         match ix {
-            ComputeBudgetInstruction::RequestUnitsDeprecated {
-                units,
-                additional_fee,
-            } => {
-                requested_cus = Some(units as u64);
-                priority = additional_fee as u64 * 1_000_000 / units as u64;
-            }
             ComputeBudgetInstruction::RequestHeapFrame(_) => {}
             ComputeBudgetInstruction::SetComputeUnitLimit(units) => {
                 requested_cus = Some(units as u64)
             }
             ComputeBudgetInstruction::SetComputeUnitPrice(cu_price) => priority = cu_price,
-            ComputeBudgetInstruction::SetLoadedAccountsDataSizeLimit(_) => {}
+            ComputeBudgetInstruction::Unused
+            | ComputeBudgetInstruction::SetLoadedAccountsDataSizeLimit(_) => {}
         }
     }
 
