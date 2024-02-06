@@ -553,6 +553,7 @@ name = "banking-trace-tool"
 version = "0.1.0"
 dependencies = [
  "bincode",
+ "chrono",
  "clap 4.4.7",
  "prio-graph",
  "serde",
@@ -4412,7 +4413,7 @@ dependencies = [
 [[package]]
 name = "solana-alt-store"
 version = "0.1.0"
-source = "git+https://github.com/apfitzge/solana-alt-store.git#ef729693ddec7f158bd19e62b8dee42c3314bc0d"
+source = "git+https://github.com/apfitzge/solana-alt-store.git#8840c22e1c61e5bdb27e47b93d2e711db91dac94"
 dependencies = [
  "bincode",
  "serde",

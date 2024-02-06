@@ -11,6 +11,7 @@ use {
 
 mod account_usage;
 mod cli;
+mod dump;
 mod graphia_input;
 mod process;
 mod setup;
@@ -28,6 +29,14 @@ fn main() {
     let event_file_paths = get_event_file_paths(path);
     let result = match mode {
         TraceToolMode::AccountUsage(slot_range) => account_usage(&event_file_paths, slot_range),
+        TraceToolMode::Dump {
+            accounts,
+            skip_alt_resolution,
+        } => dump::dump(
+            &event_file_paths,
+            accounts.map(|accounts| accounts.into_iter().collect()),
+            skip_alt_resolution,
+        ),
         TraceToolMode::GraphiaInput { slot, output } => {
             graphia_input(&event_file_paths, slot, output)
         }

@@ -1,6 +1,6 @@
 use {
     clap::{Args, Parser, Subcommand},
-    solana_sdk::clock::Slot,
+    solana_sdk::{clock::Slot, pubkey::Pubkey},
     std::path::PathBuf,
 };
 
@@ -18,6 +18,15 @@ pub struct Cli {
 pub enum TraceToolMode {
     /// Get account usage statistics for a given slot range.
     AccountUsage(SlotRange),
+    /// Dump all the non-vote events in the directory.
+    Dump {
+        /// Limit dumping to these accounts, if specified.
+        #[clap(short, long)]
+        accounts: Option<Vec<Pubkey>>,
+        /// Skip ALT resolution.
+        #[clap(short, long)]
+        skip_alt_resolution: bool,
+    },
     /// Write graphia json input file for a given slot.
     GraphiaInput {
         /// The slot to write the graphia input file for.
