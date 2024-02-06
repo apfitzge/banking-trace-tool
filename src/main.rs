@@ -3,6 +3,7 @@ use {
         account_usage::account_usage, cli::Cli, graphia_input::graphia_input,
         slot_ranges::slot_ranges, update_alt_store::update_alt_store,
     },
+    chrono::{DateTime, Utc},
     clap::Parser,
     cli::TraceToolMode,
     setup::get_event_file_paths,
@@ -32,10 +33,14 @@ fn main() {
         TraceToolMode::Dump {
             accounts,
             skip_alt_resolution,
+            start_timestamp,
+            end_timestamp,
         } => dump::dump(
             &event_file_paths,
             accounts.map(|accounts| accounts.into_iter().collect()),
             skip_alt_resolution,
+            start_timestamp.map(cli_parse_timestamp),
+            end_timestamp.map(cli_parse_timestamp),
         ),
         TraceToolMode::GraphiaInput { slot, output } => {
             graphia_input(&event_file_paths, slot, output)
@@ -50,4 +55,8 @@ fn main() {
         eprintln!("Error: {err}");
         exit(1);
     }
+}
+
+fn cli_parse_timestamp(s: String) -> DateTime<Utc> {
+    s.parse().expect("Failed to parse timestamp")
 }
