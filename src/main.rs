@@ -1,7 +1,7 @@
 use {
     crate::{
-        account_usage::account_usage, cli::Cli, graphia_input::graphia_input,
-        slot_ranges::slot_ranges, update_alt_store::update_alt_store,
+        account_usage::account_usage, cli::Cli, duplicate_check::duplicate_check,
+        graphia_input::graphia_input, slot_ranges::slot_ranges, update_alt_store::update_alt_store,
     },
     chrono::{DateTime, Utc},
     clap::Parser,
@@ -13,6 +13,7 @@ use {
 mod account_usage;
 mod cli;
 mod dump;
+mod duplicate_check;
 mod graphia_input;
 mod process;
 mod setup;
@@ -39,6 +40,14 @@ fn main() {
             &event_file_paths,
             accounts.map(|accounts| accounts.into_iter().collect()),
             skip_alt_resolution,
+            start_timestamp.map(cli_parse_timestamp),
+            end_timestamp.map(cli_parse_timestamp),
+        ),
+        TraceToolMode::DuplicateCheck {
+            start_timestamp,
+            end_timestamp,
+        } => duplicate_check(
+            &event_file_paths,
             start_timestamp.map(cli_parse_timestamp),
             end_timestamp.map(cli_parse_timestamp),
         ),

@@ -37,6 +37,18 @@ pub enum TraceToolMode {
         #[clap(long)]
         end_timestamp: Option<String>,
     },
+    DuplicateCheck {
+        /// Timestamp to start dumping from.
+        /// Format: "YYYY-MM-DDTHH:HH:SS.xxxxxxxxZ".
+        /// Example: "2024-02-02T20:01:30.436991968Z".
+        #[clap(long)]
+        start_timestamp: Option<String>,
+        /// Timestamp to stop dumping at.
+        /// Format: "YYYY-MM-DDTHH:HH:SS.xxxxxxxxZ".
+        /// Example: "2024-02-02T20:01:30.436991968Z".
+        #[clap(long)]
+        end_timestamp: Option<String>,
+    },
     /// Write graphia json input file for a given slot.
     GraphiaInput {
         /// The slot to write the graphia input file for.
