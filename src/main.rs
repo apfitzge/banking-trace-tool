@@ -35,12 +35,14 @@ fn main() {
         TraceToolMode::AccountUsage(slot_range) => account_usage(&event_file_paths, slot_range),
         TraceToolMode::Dump {
             accounts,
+            ips,
             skip_alt_resolution,
             start_timestamp,
             end_timestamp,
         } => dump::dump(
             &event_file_paths,
             accounts.map(|accounts| accounts.into_iter().collect()),
+            ips.map(|ips| ips.into_iter().collect()),
             skip_alt_resolution,
             start_timestamp.map(cli_parse_timestamp),
             end_timestamp.map(cli_parse_timestamp),
