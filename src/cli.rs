@@ -45,6 +45,19 @@ pub enum TraceToolMode {
         #[clap(default_value = "graphia_input.json")]
         output: PathBuf,
     },
+    /// Get summary of packet counts.
+    PacketCount {
+        /// Timestamp to start summary from.
+        /// Format: "YYYY-MM-DDTHH:HH:SS.xxxxxxxxZ".
+        /// Example: "2024-02-02T20:01:30.436991968Z".
+        #[clap(long)]
+        start_timestamp: Option<String>,
+        /// Timestamp to stop summary at.
+        /// Format: "YYYY-MM-DDTHH:HH:SS.xxxxxxxxZ".
+        /// Example: "2024-02-02T20:01:30.436991968Z".
+        #[clap(long)]
+        end_timestamp: Option<String>,
+    },
     /// Get the ranges of slots for data in directory.
     SlotRanges,
     /// Update Address-Lookup-Table store for tables used in a given slot-range.

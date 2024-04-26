@@ -1,7 +1,7 @@
 use {
     crate::{
         account_usage::account_usage, cli::Cli, graphia_input::graphia_input,
-        slot_ranges::slot_ranges, update_alt_store::update_alt_store,
+        packet_count::packet_count, slot_ranges::slot_ranges, update_alt_store::update_alt_store,
     },
     chrono::{DateTime, Utc},
     clap::Parser,
@@ -14,6 +14,7 @@ mod account_usage;
 mod cli;
 mod dump;
 mod graphia_input;
+mod packet_count;
 mod process;
 mod setup;
 mod slot_ranges;
@@ -45,6 +46,14 @@ fn main() {
         TraceToolMode::GraphiaInput { slot, output } => {
             graphia_input(&event_file_paths, slot, output)
         }
+        TraceToolMode::PacketCount {
+            start_timestamp,
+            end_timestamp,
+        } => packet_count(
+            &event_file_paths,
+            start_timestamp.map(cli_parse_timestamp),
+            end_timestamp.map(cli_parse_timestamp),
+        ),
         TraceToolMode::SlotRanges => slot_ranges(&event_file_paths),
         TraceToolMode::UpdateAltStore(slot_range) => {
             update_alt_store(&event_file_paths, slot_range)
