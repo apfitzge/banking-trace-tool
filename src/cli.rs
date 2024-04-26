@@ -1,7 +1,7 @@
 use {
     clap::{Args, Parser, Subcommand},
     solana_sdk::{clock::Slot, pubkey::Pubkey},
-    std::path::PathBuf,
+    std::{net::IpAddr, path::PathBuf},
 };
 
 #[derive(Debug, Parser)]
@@ -23,6 +23,9 @@ pub enum TraceToolMode {
         /// Limit dumping to these accounts, if specified.
         #[clap(short, long)]
         accounts: Option<Vec<Pubkey>>,
+        /// Limit dumpig to these Ips, if specified.
+        #[clap(short, long)]
+        ips: Option<Vec<IpAddr>>,
         /// Skip ALT resolution.
         #[clap(short, long)]
         skip_alt_resolution: bool,

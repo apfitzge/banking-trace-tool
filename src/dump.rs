@@ -8,18 +8,20 @@ use {
         slot_history::Slot,
         transaction::{SanitizedTransaction, SanitizedVersionedTransaction, VersionedTransaction},
     },
-    std::{collections::HashSet, path::PathBuf},
+    std::{collections::HashSet, net::IpAddr, path::PathBuf},
 };
 
 pub fn dump(
     event_file_paths: &[PathBuf],
     accounts: Option<HashSet<Pubkey>>,
+    ips: Option<HashSet<IpAddr>>,
     skip_alt_resolution: bool,
     start_timestamp: Option<DateTime<Utc>>,
     end_timestamp: Option<DateTime<Utc>>,
 ) -> std::io::Result<()> {
     let mut handler = Dumper::new(
         accounts,
+        ips,
         skip_alt_resolution,
         start_timestamp,
         end_timestamp,
@@ -30,6 +32,7 @@ pub fn dump(
 
 struct Dumper {
     accounts: Option<HashSet<Pubkey>>,
+    ips: Option<HashSet<IpAddr>>,
     start_timestamp: Option<DateTime<Utc>>,
     end_timestamp: Option<DateTime<Utc>>,
     alt_store: Option<Store>,
@@ -40,6 +43,7 @@ struct Dumper {
 impl Dumper {
     pub fn new(
         accounts: Option<HashSet<Pubkey>>,
+        ips: Option<HashSet<IpAddr>>,
         skip_alt_resolution: bool,
         start_timestamp: Option<DateTime<Utc>>,
         end_timestamp: Option<DateTime<Utc>>,
@@ -48,6 +52,7 @@ impl Dumper {
         let started = start_timestamp.is_none();
         Self {
             accounts,
+            ips,
             start_timestamp,
             end_timestamp,
             alt_store: (!skip_alt_resolution)
@@ -107,6 +112,12 @@ impl Dumper {
                     else {
                         continue;
                     };
+
+                    if let Some(ips) = &self.ips {
+                        if !ips.contains(&packet.meta().addr) {
+                            continue;
+                        }
+                    }
 
                     match &self.alt_store {
                         None => {
