@@ -60,6 +60,8 @@ pub enum TraceToolMode {
     },
     /// Get the ranges of slots for data in directory.
     SlotRanges,
+    /// Get the time ranges of data in the directory.
+    TimeRange,
     /// Update Address-Lookup-Table store for tables used in a given slot-range.
     UpdateAltStore(SlotRange),
 }
