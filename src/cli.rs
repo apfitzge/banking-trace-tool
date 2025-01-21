@@ -60,6 +60,8 @@ pub enum TraceToolMode {
         /// Example: "2024-02-02T20:01:30.436991968Z".
         #[clap(long)]
         end_timestamp: Option<String>,
+        /// Number of IPs to show data for.
+        ip_count: Option<usize>,
     },
     /// Get the ranges of slots for data in directory.
     SlotRanges,

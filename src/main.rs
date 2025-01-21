@@ -53,10 +53,12 @@ fn main() {
         TraceToolMode::PacketCount {
             start_timestamp,
             end_timestamp,
+            ip_count,
         } => packet_count(
             &event_file_paths,
             start_timestamp.map(cli_parse_timestamp),
             end_timestamp.map(cli_parse_timestamp),
+            ip_count.unwrap_or(5),
         ),
         TraceToolMode::SlotRanges => slot_ranges(&event_file_paths),
         TraceToolMode::TimeRange => time_range(&event_file_paths),
