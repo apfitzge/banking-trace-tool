@@ -186,19 +186,20 @@ impl PacketCounter {
                     let forwarded = packet.meta().forwarded();
 
                     let unique = if let Some(data) = packet.data(..) {
-                        let Some(versioned_transaction) =
+                        if let Some(versioned_transaction) =
                             bincode::deserialize::<VersionedTransaction>(data).ok()
-                        else {
-                            continue;
-                        };
-                        self.packet_metrics
-                            .signature_set
-                            .insert(versioned_transaction.signatures[0])
+                        {
+                            self.packet_metrics
+                                .signature_set
+                                .insert(versioned_transaction.signatures[0])
+                        } else {
+                            false
+                        }
                     } else {
                         false
                     };
 
-                    self.packet_metrics.valid_count += usize::from(valid && unique);
+                    self.packet_metrics.valid_count += usize::from(valid);
                     self.packet_metrics.valid_unique_count += usize::from(valid && unique);
 
                     self.packet_metrics.tpu_count += usize::from(valid && !forwarded);
