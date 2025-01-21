@@ -134,11 +134,11 @@ impl PacketCounter {
             }
         };
 
-        println!("Top 5 IPs by total packets:");
+        println!("Top {num_ips_to_report} IPs by total packets:");
         print_top_ips(total_ip_counts);
-        println!("Top 5 IPs by TPU packets:");
+        println!("Top {num_ips_to_report} IPs by TPU packets:");
         print_top_ips(tpu_ip_counts);
-        println!("Top 5 IPs by FWD packets:");
+        println!("Top {num_ips_to_report} IPs by FWD packets:");
         print_top_ips(fwd_ip_counts);
     }
 
