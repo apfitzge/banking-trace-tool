@@ -61,6 +61,7 @@ pub enum TraceToolMode {
         #[clap(long)]
         end_timestamp: Option<String>,
         /// Number of IPs to show data for.
+        #[clap(short, long)]
         ip_count: Option<usize>,
     },
     /// Get the ranges of slots for data in directory.
