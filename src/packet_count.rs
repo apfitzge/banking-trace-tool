@@ -14,10 +14,11 @@ pub fn packet_count(
     event_file_paths: &[PathBuf],
     start_timestamp: Option<DateTime<Utc>>,
     end_timestamp: Option<DateTime<Utc>>,
+    ip_count: usize,
 ) -> std::io::Result<()> {
     let mut handler = PacketCounter::new(start_timestamp, end_timestamp);
     process_event_files(event_file_paths, &mut |event| handler.handle_event(event))?;
-    handler.report();
+    handler.report(ip_count);
     Ok(())
 }
 
@@ -79,7 +80,7 @@ impl PacketCounter {
         }
     }
 
-    pub fn report(&self) {
+    pub fn report(&self, num_ips_to_report: usize) {
         // destructure packet_metrics
         let PacketMetrics {
             total_count,
@@ -116,14 +117,14 @@ impl PacketCounter {
         println!("TPU IPs: {}", tpu_ip_counts.len());
         println!("FWD IPs: {}", fwd_ip_counts.len());
 
-        // Print the top 5 IP addresses for each category
+        // Print the top `ip_count` IP addresses for each category
         let print_top_ips = |ip_count: &HashMap<IpAddr, IpPacketCounts>| {
             let mut ip_counts: Vec<_> = ip_count.iter().collect();
             ip_counts.sort_by_key(|(_, ip_packet_counts)| ip_packet_counts.valid);
             for (ip, count) in ip_counts
                 .iter()
                 .rev()
-                .take(5)
+                .take(num_ips_to_report)
                 .map(|(ip, count)| (ip, count))
             {
                 println!(
@@ -133,11 +134,11 @@ impl PacketCounter {
             }
         };
 
-        println!("Top 5 IPs by total packets:");
+        println!("Top {num_ips_to_report} IPs by total packets:");
         print_top_ips(total_ip_counts);
-        println!("Top 5 IPs by TPU packets:");
+        println!("Top {num_ips_to_report} IPs by TPU packets:");
         print_top_ips(tpu_ip_counts);
-        println!("Top 5 IPs by FWD packets:");
+        println!("Top {num_ips_to_report} IPs by FWD packets:");
         print_top_ips(fwd_ip_counts);
     }
 
@@ -186,8 +187,8 @@ impl PacketCounter {
                     let forwarded = packet.meta().forwarded();
 
                     let unique = if let Some(data) = packet.data(..) {
-                        if let Some(versioned_transaction) =
-                            bincode::deserialize::<VersionedTransaction>(data).ok()
+                        if let Ok(versioned_transaction) =
+                            bincode::deserialize::<VersionedTransaction>(data)
                         {
                             self.packet_metrics
                                 .signature_set
