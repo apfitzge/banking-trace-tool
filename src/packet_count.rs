@@ -199,7 +199,7 @@ impl PacketCounter {
                         false
                     };
 
-                    self.packet_metrics.valid_count += usize::from(valid && unique);
+                    self.packet_metrics.valid_count += usize::from(valid);
                     self.packet_metrics.valid_unique_count += usize::from(valid && unique);
 
                     self.packet_metrics.tpu_count += usize::from(valid && !forwarded);
