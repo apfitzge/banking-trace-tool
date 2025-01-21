@@ -179,40 +179,45 @@ impl PacketCounter {
                 for packet in packet_batch {
                     // Ignore any packet that was filtered by sigverify
                     self.packet_metrics.total_count += 1;
-                    let Some(data) = packet.data(..) else {
-                        continue;
-                    };
 
-                    let Some(versioned_transaction) =
-                        bincode::deserialize::<VersionedTransaction>(data).ok()
-                    else {
-                        continue;
-                    };
-                    let unique = self
-                        .packet_metrics
-                        .signature_set
-                        .insert(versioned_transaction.signatures[0]);
-
-                    self.packet_metrics.valid_count += 1;
-                    self.packet_metrics.valid_unique_count += usize::from(unique);
-
+                    let valid = !packet.meta().discard();
                     let staked = packet.meta().is_from_staked_node();
                     let forwarded = packet.meta().forwarded();
 
-                    self.packet_metrics.tpu_count += usize::from(!forwarded);
-                    self.packet_metrics.fwd_count += usize::from(forwarded);
+                    let unique = if let Some(data) = packet.data(..) {
+                        let Some(versioned_transaction) =
+                            bincode::deserialize::<VersionedTransaction>(data).ok()
+                        else {
+                            continue;
+                        };
+                        self.packet_metrics
+                            .signature_set
+                            .insert(versioned_transaction.signatures[0])
+                    } else {
+                        false
+                    };
 
-                    self.packet_metrics.staked_count += usize::from(staked);
-                    self.packet_metrics.staked_tpu_count += usize::from(staked && !forwarded);
-                    self.packet_metrics.staked_fwd_count += usize::from(staked && forwarded);
+                    self.packet_metrics.valid_count += usize::from(valid && unique);
+                    self.packet_metrics.valid_unique_count += usize::from(valid && unique);
 
-                    self.packet_metrics.tpu_unique_count += usize::from(!forwarded && unique);
-                    self.packet_metrics.fwd_unique_count += usize::from(forwarded && unique);
+                    self.packet_metrics.tpu_count += usize::from(valid && !forwarded);
+                    self.packet_metrics.fwd_count += usize::from(valid && forwarded);
+
+                    self.packet_metrics.staked_count += usize::from(valid && staked);
+                    self.packet_metrics.staked_tpu_count +=
+                        usize::from(valid && staked && !forwarded);
+                    self.packet_metrics.staked_fwd_count +=
+                        usize::from(valid && staked && forwarded);
+
+                    self.packet_metrics.tpu_unique_count +=
+                        usize::from(valid && !forwarded && unique);
+                    self.packet_metrics.fwd_unique_count +=
+                        usize::from(valid && forwarded && unique);
 
                     self.packet_metrics.tpu_staked_unique_count +=
-                        usize::from(!forwarded && staked && unique);
+                        usize::from(valid && !forwarded && staked && unique);
                     self.packet_metrics.fwd_staked_unique_count +=
-                        usize::from(forwarded && staked && unique);
+                        usize::from(valid && forwarded && staked && unique);
 
                     let update_ip_counts =
                         |ip_counts: &mut HashMap<IpAddr, IpPacketCounts>,
@@ -221,8 +226,8 @@ impl PacketCounter {
                          staked: bool| {
                             let ip_packet_counts = ip_counts.entry(ip).or_default();
                             ip_packet_counts.total += 1;
-                            ip_packet_counts.unique += usize::from(unique);
-                            ip_packet_counts.staked += usize::from(staked);
+                            ip_packet_counts.unique += usize::from(valid && unique);
+                            ip_packet_counts.staked += usize::from(valid && staked);
                         };
 
                     update_ip_counts(
