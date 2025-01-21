@@ -59,6 +59,7 @@ struct PacketMetrics {
 #[derive(Default)]
 struct IpPacketCounts {
     total: usize,
+    valid: usize,
     unique: usize,
     staked: usize,
 }
@@ -118,7 +119,7 @@ impl PacketCounter {
         // Print the top 5 IP addresses for each category
         let print_top_ips = |ip_count: &HashMap<IpAddr, IpPacketCounts>| {
             let mut ip_counts: Vec<_> = ip_count.iter().collect();
-            ip_counts.sort_by_key(|(_, ip_packet_counts)| ip_packet_counts.total);
+            ip_counts.sort_by_key(|(_, ip_packet_counts)| ip_packet_counts.valid);
             for (ip, count) in ip_counts
                 .iter()
                 .rev()
@@ -126,8 +127,8 @@ impl PacketCounter {
                 .map(|(ip, count)| (ip, count))
             {
                 println!(
-                    "  {}: total={} unique={} staked={}",
-                    ip, count.total, count.unique, count.staked
+                    "  {}: total={} valid={} unique={} staked={}",
+                    ip, count.total, count.valid, count.unique, count.staked
                 );
             }
         };
@@ -226,6 +227,7 @@ impl PacketCounter {
                          staked: bool| {
                             let ip_packet_counts = ip_counts.entry(ip).or_default();
                             ip_packet_counts.total += 1;
+                            ip_packet_counts.valid += usize::from(valid);
                             ip_packet_counts.unique += usize::from(valid && unique);
                             ip_packet_counts.staked += usize::from(valid && staked);
                         };
