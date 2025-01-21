@@ -186,14 +186,15 @@ impl PacketCounter {
                     let forwarded = packet.meta().forwarded();
 
                     let unique = if let Some(data) = packet.data(..) {
-                        let Some(versioned_transaction) =
+                        if let Some(versioned_transaction) =
                             bincode::deserialize::<VersionedTransaction>(data).ok()
-                        else {
-                            continue;
-                        };
-                        self.packet_metrics
-                            .signature_set
-                            .insert(versioned_transaction.signatures[0])
+                        {
+                            self.packet_metrics
+                                .signature_set
+                                .insert(versioned_transaction.signatures[0])
+                        } else {
+                            false
+                        }
                     } else {
                         false
                     };
