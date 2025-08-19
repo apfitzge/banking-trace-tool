@@ -1,15 +1,22 @@
 use {
     crate::{cli::SlotRange, process::process_event_files},
+    agave_banking_stage_ingress_types::BankingPacketBatch,
     solana_alt_store::Store,
-    solana_core::banking_trace::{BankingPacketBatch, ChannelLabel, TimedTracedEvent, TracedEvent},
-    solana_sdk::{
-        borsh1::try_from_slice_unchecked,
-        clock::Slot,
-        compute_budget::{self, ComputeBudgetInstruction},
-        pubkey::Pubkey,
-        transaction::{SanitizedTransaction, SanitizedVersionedTransaction, VersionedTransaction},
+    solana_borsh::v1::try_from_slice_unchecked,
+    solana_clock::Slot,
+    solana_compute_budget_interface::ComputeBudgetInstruction,
+    solana_core::banking_trace::{ChannelLabel, TimedTracedEvent, TracedEvent},
+    solana_pubkey::Pubkey,
+    solana_sdk_ids::compute_budget,
+    solana_transaction::{
+        sanitized::SanitizedTransaction,
+        versioned::{sanitized::SanitizedVersionedTransaction, VersionedTransaction},
     },
-    std::{collections::HashMap, ops::RangeInclusive, path::PathBuf},
+    std::{
+        collections::{HashMap, HashSet},
+        ops::RangeInclusive,
+        path::PathBuf,
+    },
 };
 
 pub fn account_usage(event_file_paths: &[PathBuf], slot_range: SlotRange) -> std::io::Result<()> {
@@ -63,13 +70,15 @@ impl AccountUsageHandler {
         for tx in self
             .current_packet_batches
             .iter()
-            .flat_map(|b| b.0.iter().flat_map(|b| b.iter().cloned()))
+            .flat_map(|b| b.iter().flat_map(|b| b.iter()))
             .filter_map(|p| bincode::deserialize::<VersionedTransaction>(p.data(..)?).ok())
             .filter_map(|tx| SanitizedVersionedTransaction::try_from(tx).ok())
         {
             let (priority, requested_cus) = get_priority_and_requested_cus(&tx);
             let hash = tx.get_message().message.hash();
-            let Ok(tx) = SanitizedTransaction::try_new(tx, hash, false, &self.alt_store) else {
+            let Ok(tx) =
+                SanitizedTransaction::try_new(tx, hash, false, &self.alt_store, &HashSet::new())
+            else {
                 eprintln!(
                     "failed to sanitize transaction. Possibly need to update the alt-store first."
                 );

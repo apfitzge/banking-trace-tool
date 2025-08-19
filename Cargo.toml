@@ -12,6 +12,13 @@ clap = { version = "4.3.11", features = ["derive"] }
 prio-graph = { git = "https://github.com/apfitzge/prio-graph.git", rev = "c8ced5c68dbb64307573654897cf3284a4ac8a16" }
 serde = { version = "1.0.190" }
 serde_json = { version = "1.0.108" }
-solana-core = { version = "1.18.4" }
-solana-sdk = { version = "1.18.4" }
+solana-core = { version = "=2.3.1" }
 solana-alt-store = { git = "https://github.com/apfitzge/solana-alt-store.git" }
+agave-banking-stage-ingress-types = "2.3.1"
+solana-transaction = "=2.2.2"
+solana-clock = "2.2.2"
+solana-pubkey = "2.2.2"
+solana-sdk-ids = "2.2.1"
+solana-compute-budget-interface = "2.2.2"
+solana-borsh = "2.2.1"
+solana-signature = "2.2.2"

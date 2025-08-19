@@ -1,8 +1,10 @@
 use {
     crate::{cli::SlotRange, process::process_event_files},
+    agave_banking_stage_ingress_types::BankingPacketBatch,
     solana_alt_store::{Store, UpdateMode},
-    solana_core::banking_trace::{BankingPacketBatch, ChannelLabel, TimedTracedEvent, TracedEvent},
-    solana_sdk::{slot_history::Slot, transaction::VersionedTransaction},
+    solana_clock::Slot,
+    solana_core::banking_trace::{ChannelLabel, TimedTracedEvent, TracedEvent},
+    solana_transaction::versioned::VersionedTransaction,
     std::{collections::HashSet, ops::RangeInclusive, path::PathBuf},
 };
 
@@ -66,7 +68,7 @@ impl UpdateAddressLookupTableStoreHandler {
         for tx in self
             .current_packet_batches
             .iter()
-            .flat_map(|b| b.0.iter().flat_map(|b| b.iter().cloned()))
+            .flat_map(|b| b.iter().flat_map(|b| b.iter()))
             .filter_map(|p| bincode::deserialize::<VersionedTransaction>(p.data(..)?).ok())
         {
             if let Some(atls) = tx.message.address_table_lookups() {

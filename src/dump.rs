@@ -1,12 +1,14 @@
 use {
     crate::process::process_event_files,
+    agave_banking_stage_ingress_types::BankingPacketBatch,
     chrono::{DateTime, Utc},
     solana_alt_store::Store,
-    solana_core::banking_trace::{BankingPacketBatch, ChannelLabel, TimedTracedEvent, TracedEvent},
-    solana_sdk::{
-        pubkey::Pubkey,
-        slot_history::Slot,
-        transaction::{SanitizedTransaction, SanitizedVersionedTransaction, VersionedTransaction},
+    solana_clock::Slot,
+    solana_core::banking_trace::{ChannelLabel, TimedTracedEvent, TracedEvent},
+    solana_pubkey::Pubkey,
+    solana_transaction::{
+        sanitized::SanitizedTransaction,
+        versioned::{sanitized::SanitizedVersionedTransaction, VersionedTransaction},
     },
     std::{collections::HashSet, net::IpAddr, path::PathBuf},
 };
@@ -97,7 +99,7 @@ impl Dumper {
         packet_batches: BankingPacketBatch,
     ) {
         if matches!(label, ChannelLabel::NonVote) {
-            for packet_batch in packet_batches.0.iter() {
+            for packet_batch in packet_batches.iter() {
                 for packet in packet_batch {
                     let Some(data) = packet.data(..) else {
                         continue;
@@ -144,6 +146,7 @@ impl Dumper {
                                 hash,
                                 false,
                                 alt_store,
+                                &HashSet::new(),
                             ) else {
                                 continue;
                             };

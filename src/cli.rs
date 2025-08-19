@@ -1,6 +1,7 @@
 use {
     clap::{Args, Parser, Subcommand},
-    solana_sdk::{clock::Slot, pubkey::Pubkey},
+    solana_clock::Slot,
+    solana_pubkey::Pubkey,
     std::{net::IpAddr, path::PathBuf},
 };
 

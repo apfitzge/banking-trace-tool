@@ -1,16 +1,19 @@
 use {
     crate::process::process_event_files,
+    agave_banking_stage_ingress_types::BankingPacketBatch,
     prio_graph::{AccessKind, PrioGraph, TopLevelId},
     serde::Serialize,
     solana_alt_store::Store,
-    solana_core::banking_trace::{BankingPacketBatch, ChannelLabel, TimedTracedEvent, TracedEvent},
-    solana_sdk::{
-        borsh1::try_from_slice_unchecked,
-        clock::Slot,
-        compute_budget::{self, ComputeBudgetInstruction},
-        transaction::{SanitizedTransaction, SanitizedVersionedTransaction, VersionedTransaction},
+    solana_borsh::v1::try_from_slice_unchecked,
+    solana_clock::Slot,
+    solana_compute_budget_interface::ComputeBudgetInstruction,
+    solana_core::banking_trace::{ChannelLabel, TimedTracedEvent, TracedEvent},
+    solana_sdk_ids::compute_budget,
+    solana_transaction::{
+        sanitized::SanitizedTransaction,
+        versioned::{sanitized::SanitizedVersionedTransaction, VersionedTransaction},
     },
-    std::path::PathBuf,
+    std::{collections::HashSet, path::PathBuf},
 };
 
 pub fn graphia_input(
@@ -65,7 +68,7 @@ impl GraphiaInputHandler {
         let mut transaction_tuples: Vec<_> = self
             .current_packet_batches
             .iter()
-            .flat_map(|b| b.0.iter().flat_map(|b| b.iter().cloned()))
+            .flat_map(|b| b.iter().flat_map(|b| b.iter()))
             .filter_map(|p| bincode::deserialize::<VersionedTransaction>(p.data(..)?).ok())
             .filter_map(|tx| SanitizedVersionedTransaction::try_from(tx).ok())
             .map(|tx| {
@@ -74,7 +77,7 @@ impl GraphiaInputHandler {
             })
             .filter_map(|(tx, priority, requested_cus)| {
                 let hash = tx.get_message().message.hash();
-                SanitizedTransaction::try_new(tx, hash, false, &self.alt_store)
+                SanitizedTransaction::try_new(tx, hash, false, &self.alt_store, &HashSet::new())
                     .ok()
                     .map(|tx| (tx, priority, requested_cus))
             })

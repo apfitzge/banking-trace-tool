@@ -1,7 +1,7 @@
 use {
     crate::process::process_event_files,
+    solana_clock::Slot,
     solana_core::banking_trace::{TimedTracedEvent, TracedEvent},
-    solana_sdk::clock::Slot,
     std::path::PathBuf,
 };
 
