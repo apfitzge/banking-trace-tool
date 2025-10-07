@@ -1,7 +1,7 @@
 use {
     clap::{Args, Parser, Subcommand},
+    solana_address::Address,
     solana_clock::Slot,
-    solana_pubkey::Pubkey,
     std::{net::IpAddr, path::PathBuf},
 };
 
@@ -23,7 +23,7 @@ pub enum TraceToolMode {
     Dump {
         /// Limit dumping to these accounts, if specified.
         #[clap(short, long)]
-        accounts: Option<Vec<Pubkey>>,
+        accounts: Option<Vec<Address>>,
         /// Limit dumpig to these Ips, if specified.
         #[clap(short, long)]
         ips: Option<Vec<IpAddr>>,

@@ -2,10 +2,10 @@ use {
     crate::process::process_event_files,
     agave_banking_stage_ingress_types::BankingPacketBatch,
     chrono::{DateTime, Utc},
+    solana_address::Address,
     solana_alt_store::Store,
     solana_clock::Slot,
     solana_core::banking_trace::{ChannelLabel, TimedTracedEvent, TracedEvent},
-    solana_pubkey::Pubkey,
     solana_transaction::{
         sanitized::SanitizedTransaction,
         versioned::{sanitized::SanitizedVersionedTransaction, VersionedTransaction},
@@ -15,7 +15,7 @@ use {
 
 pub fn dump(
     event_file_paths: &[PathBuf],
-    accounts: Option<HashSet<Pubkey>>,
+    accounts: Option<HashSet<Address>>,
     ips: Option<HashSet<IpAddr>>,
     skip_alt_resolution: bool,
     start_timestamp: Option<DateTime<Utc>>,
@@ -33,7 +33,7 @@ pub fn dump(
 }
 
 struct Dumper {
-    accounts: Option<HashSet<Pubkey>>,
+    accounts: Option<HashSet<Address>>,
     ips: Option<HashSet<IpAddr>>,
     start_timestamp: Option<DateTime<Utc>>,
     end_timestamp: Option<DateTime<Utc>>,
@@ -44,7 +44,7 @@ struct Dumper {
 
 impl Dumper {
     pub fn new(
-        accounts: Option<HashSet<Pubkey>>,
+        accounts: Option<HashSet<Address>>,
         ips: Option<HashSet<IpAddr>>,
         skip_alt_resolution: bool,
         start_timestamp: Option<DateTime<Utc>>,
