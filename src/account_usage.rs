@@ -1,12 +1,12 @@
 use {
     crate::{cli::SlotRange, process::process_event_files},
     agave_banking_stage_ingress_types::BankingPacketBatch,
+    solana_address::Address,
     solana_alt_store::Store,
     solana_borsh::v1::try_from_slice_unchecked,
     solana_clock::Slot,
     solana_compute_budget_interface::ComputeBudgetInstruction,
     solana_core::banking_trace::{ChannelLabel, TimedTracedEvent, TracedEvent},
-    solana_pubkey::Pubkey,
     solana_sdk_ids::compute_budget,
     solana_transaction::{
         sanitized::SanitizedTransaction,
@@ -129,7 +129,7 @@ impl AccountUsageHandler {
 }
 
 struct AccountUsageStatistics {
-    key: Pubkey,
+    key: Address,
 
     // Access kinds
     num_reads: usize,
@@ -147,7 +147,7 @@ struct AccountUsageStatistics {
 }
 
 impl AccountUsageStatistics {
-    pub fn new(key: Pubkey) -> Self {
+    pub fn new(key: Address) -> Self {
         Self {
             key,
             num_reads: 0,
