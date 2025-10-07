@@ -36,7 +36,7 @@ impl SlotRangesHandler {
 
     fn report_current_range(&self) {
         if let Some((start_slot, end_slot)) = self.current_range {
-            println!("{}-{}", start_slot, end_slot);
+            println!("{start_slot}-{end_slot}");
         }
     }
 }
