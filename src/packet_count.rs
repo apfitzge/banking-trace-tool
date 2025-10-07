@@ -104,18 +104,18 @@ impl PacketCounter {
             signature_set: _,
         } = &self.packet_metrics;
 
-        println!("Total packets: {}", total_count);
-        println!("Valid packets: {}", valid_count);
-        println!("Valid unique packets: {}", valid_unique_count);
-        println!("TPU packets: {}", tpu_count);
-        println!("FWD packets: {}", fwd_count);
-        println!("Staked packets: {}", staked_count);
-        println!("TPU staked packets: {}", staked_tpu_count);
-        println!("FWD staked packets: {}", staked_fwd_count);
-        println!("TPU unique packets: {}", tpu_unique_count);
-        println!("FWD unique packets: {}", fwd_unique_count);
-        println!("TPU staked unique packets: {}", tpu_staked_unique_count);
-        println!("FWD staked unique packets: {}", fwd_staked_unique_count);
+        println!("Total packets: {total_count}");
+        println!("Valid packets: {valid_count}");
+        println!("Valid unique packets: {valid_unique_count}");
+        println!("TPU packets: {tpu_count}");
+        println!("FWD packets: {fwd_count}");
+        println!("Staked packets: {staked_count}");
+        println!("TPU staked packets: {staked_tpu_count}");
+        println!("FWD staked packets: {staked_fwd_count}");
+        println!("TPU unique packets: {tpu_unique_count}");
+        println!("FWD unique packets: {fwd_unique_count}");
+        println!("TPU staked unique packets: {tpu_staked_unique_count}");
+        println!("FWD staked unique packets: {fwd_staked_unique_count}");
         println!("Unique IPs: {}", total_ip_counts.len());
         println!("TPU IPs: {}", tpu_ip_counts.len());
         println!("FWD IPs: {}", fwd_ip_counts.len());
